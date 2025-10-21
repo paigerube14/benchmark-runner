@@ -307,14 +307,16 @@ jobs:
       - name: 🎁 Bump Version
         run: |
           pip install setuptools bumpversion
+          ls
+          git config --global user.name 'Auto User'
+          git config --global user.email 'auto@users.noreply.github.com'
           version=$(python3 setup.py --version)
           bumpversion patch
       - name: Push version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name 'Auto User'
-          git config --global user.email 'auto@users.noreply.github.com'
+          
           git config pull.rebase false  # merge (the default strategy)
           # GITHUB_REPOSITORY already taken => GIT_REPOSITORY
           git add .bumpversion.cfg setup.py
