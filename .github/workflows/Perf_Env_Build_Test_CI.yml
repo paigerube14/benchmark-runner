@@ -305,19 +305,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install benchmark-runner wheel
       - name: 🎁 Bump Version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pip install setuptools bumpversion
           version=$(python3 setup.py --version)
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          git config pull.rebase false  # merge (the default strategy)
           bumpversion patch
+      - name: Push version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name 'Auto User'
+          git config --global user.email 'auto@users.noreply.github.com'
+          git config pull.rebase false  # merge (the default strategy)
           # GITHUB_REPOSITORY already taken => GIT_REPOSITORY
-          git commit .bumpversion.cfg setup.py -m 'bump version to exist version v'$version
+          git add .bumpversion.cfg setup.py
+          git commit -m 'bump version to exist version v'
           git push origin HEAD
-          git push origin --tags
 
   e2e:
     name: e2e
